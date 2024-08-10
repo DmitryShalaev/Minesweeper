@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 
-/// <summary>
-/// Класс `ByteArray` представляет собой массив битов, который может быть индексирован как массив логических значений.
-/// Поддерживает изменение размера и реализует интерфейс `IEnumerable<bool>`.
-/// </summary>
 namespace Core {
+
+    /// <summary>
+    /// Класс `ByteArray` представляет собой массив битов, который может быть индексирован как массив логических значений.
+    /// Поддерживает изменение размера и реализует интерфейс `IEnumerable<bool>`.
+    /// </summary>
     public class ByteArray : IEnumerable<bool> {
         /// <summary>
         /// Внутренний массив байтов для хранения битов.
@@ -14,14 +15,14 @@ namespace Core {
         /// <summary>
         /// Длина массива в битах.
         /// </summary>
-        private uint length;
+        private int length;
 
         /// <summary>
         /// Получает или задает длину массива в битах.
         /// При задании новой длины выполняется изменение размера массива при необходимости.
         /// </summary>
         /// <exception cref="ArgumentException">Выбрасывается, если новая длина отрицательна.</exception>
-        public uint Length {
+        public int Length {
             get => length;
             set {
                 if(value > (data?.Length ?? 0) * 8) {
@@ -37,7 +38,7 @@ namespace Core {
         /// </summary>
         /// <param name="length">Длина массива в битах.</param>
         /// <exception cref="ArgumentException">Выбрасывается, если длина отрицательна.</exception>
-        public ByteArray(uint length) => Resize(length);
+        public ByteArray(int length) => Resize(length);
 
         /// <summary>
         /// Индексатор для доступа к биту по указанному индексу.
@@ -49,6 +50,7 @@ namespace Core {
             get => index < 0 || index >= length
                     ? throw new ArgumentOutOfRangeException(nameof(index), "Индекс вне диапазона.")
                     : (data![index / 8] & (1 << (index % 8))) != 0;
+
             set {
                 if(index < 0 || index >= length)
                     throw new ArgumentOutOfRangeException(nameof(index), "Индекс вне диапазона.");
@@ -69,8 +71,8 @@ namespace Core {
         /// </summary>
         /// <param name="newSize">Новая длина в битах.</param>
         /// <exception cref="ArgumentException">Выбрасывается, если новая длина отрицательна.</exception>
-        private void Resize(uint newSize) {
-            uint newByteSize = (newSize + 7) / 8; // Округление вверх для количества байтов
+        private void Resize(int newSize) {
+            int newByteSize = (newSize + 7) / 8; // Округление вверх для количества байтов
             byte[] newByteArray = new byte[newByteSize];
 
             if(data != null)
