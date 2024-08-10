@@ -72,6 +72,9 @@ namespace Core {
         /// <param name="newSize">Новая длина в битах.</param>
         /// <exception cref="ArgumentException">Выбрасывается, если новая длина отрицательна.</exception>
         private void Resize(int newSize) {
+            if(newSize < 0)
+                throw new ArgumentException("Размер должен быть больше нуля", nameof(newSize));
+
             int newByteSize = (newSize + 7) / 8; // Округление вверх для количества байтов
             byte[] newByteArray = new byte[newByteSize];
 
