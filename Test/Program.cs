@@ -1,78 +1,64 @@
 ﻿using Core;
 
-namespace Test
-{
-    internal class Program
-    {
-        static void Set(ref Dictionary<int, int> array, Result b)
-        {
-            foreach (var item in b.results)
-            {
-                if (item is not null)
-                {
+namespace Test {
+    internal class Program {
+        static void Set(ref Dictionary<int, string> array, Result b) {
+            foreach(Result? item in b.results) {
+                if(item is not null) {
 
-                    array[item.Shift] = item.NumberOfBombs == 0 ? -1 : item.NumberOfBombs;
+                    array[item.Shift] = $"{(item.IsBomb ? "*" : $"{(item.NumberOfBombs == 0 ? "#" : item.NumberOfBombs.ToString())}")}";
                     Set(ref array, item);
                 }
-
             }
         }
 
-
-
-        static void Main()
-        {
+        static void Main() {
             int Height = 25;
             int Width = 25;
             var random = new Random();
-            while (true)
-            {
-                for (int ii = 0; ii < 1; ii++)
-                {
-                    Minesweeper minesweeper = new(Height, Width, random.Next(10, Width * Height / 2));
+            while(true) {
 
-                    minesweeper.CheckCell(1, 1);
+                Minesweeper minesweeper = new(Height, Width, random.Next(50, Width * Height / 2));
 
-                    Dictionary<int, int> array = Enumerable.Range(0, Height * Width).ToDictionary(i => i, i => 0);
+                var array = Enumerable.Range(0, Height * Width).ToDictionary(i => i, i => "\"");
 
-                    for (int i = 0; i < Height; i++)
-                    {
-                        for (int j = 0; j < Width; j++)
-                        {
-                            Console.Write($"{(minesweeper.Bombs[i * Width + j] == true ? "*" : " ")} ");
+                while(true) {
+                    Console.WriteLine();
+                    string? str = Console.ReadLine();
+                    Console.WriteLine();
+                    if(!string.IsNullOrEmpty(str) && str != "") {
+                        var t = str!.Split().Select(i => int.Parse(i.Trim())).ToList();
+                        int x = t[0];
+                        int y = t[1];
+
+                        Result b = minesweeper.CheckCell(x, y);
+
+                        if(b.IsBomb) {
+                            array[b.Shift] = "*";
+                            Console.WriteLine();
+                            Console.WriteLine("GG");
+                            Console.WriteLine();
                         }
 
-                        Console.Write("\t");
-                        for (int j = 0; j < Width; j++)
-                        {
-                            Result b = minesweeper.CheckCell(j, i);
-                            Console.Write($"{(b.IsBomb ? "*" : b.NumberOfBombs == 0 ? " " : b.NumberOfBombs)} ");
+                        if(b.NumberOfBombs == 0) {
+                            array[b.Shift] = $"{(b.IsBomb ? "*" : $"{(b.NumberOfBombs == 0 ? "#" : b.NumberOfBombs.ToString())}")}";
+                            Set(ref array, b);
+                        } else {
+                            array[b.Shift] = $"{b.NumberOfBombs}";
+                        }
 
-                            if (b.NumberOfBombs == 0)
-                            {
-                                Set(ref array, b);
+                        for(int i = 0; i < Height; i++) {
+                            for(int j = 0; j < Width; j++) {
+                                Console.Write($"{array[i * Width + j]} ");
                             }
 
+                            Console.WriteLine();
                         }
-
-                        Console.WriteLine();
+                    } else {
+                        break;
                     }
-
-                    for (int i = 0; i < Height; i++)
-                    {
-                        for (int j = 0; j < Width; j++)
-                        {
-                            Console.Write($"{(array[i * Width + j] == -1 ? "#" : array[i * Width + j] == 0 ? " " : array[i * Width + j])} ");
-                        }
-                        Console.WriteLine();
-                    }
-
-                    Console.WriteLine();
-                    Console.WriteLine();
                 }
 
-
-                Console.ReadKey();
                 Console.Clear();
             }
         }
