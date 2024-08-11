@@ -159,7 +159,7 @@
             HashSet<int> hash = [];
             Result result = new(Width);
             int[] neighbors = GetNeighbors();
-            GetEmptyRegion(shift, ref result!, neighbors, hash);
+            GetEmptyRegion(shift, ref result!, ref neighbors, ref hash);
 
             return result!;
         }
@@ -171,7 +171,7 @@
         /// <param name="result">Объект <see cref="Result"/> для сохранения информации о проверенной области. Может быть заменен на <c>null</c>, если ячейка уже проверена или содержит мину.</param>
         /// <param name="neighbors">Массив смещений для определения соседних ячеек.</param>
         /// <param name="hash">Множество <see cref="HashSet{T}"/>, содержащее смещения уже проверенных ячеек, чтобы избежать повторной проверки.</param>
-        private void GetEmptyRegion(int shift, ref Result? result, int[] neighbors, HashSet<int> hash) {
+        private void GetEmptyRegion(int shift, ref Result? result, ref int[] neighbors, ref HashSet<int> hash) {
             if(result is null || hash.Contains(shift)) {
                 result = null;
                 return;
@@ -194,7 +194,7 @@
             for(int i = 0; i < 4; i++) {
                 if(IsNeighborCellValid(shift, neighbors[i])) {
                     result.results[i] = new Result(Width);
-                    GetEmptyRegion(shift + neighbors[i], ref result.results[i]!, neighbors, hash);
+                    GetEmptyRegion(shift + neighbors[i], ref result.results[i]!, ref neighbors, ref hash);
                 }
             }
         }
