@@ -21,6 +21,10 @@
         /// Количество мин в соседних ячейках.
         /// </summary>
         public int NumberOfBombs { get; set; } = numberOfBombs;
+
+        public int X { get; set; }
+        public int Y{ get; set; }
+        public int Shift { get; set; }
     }
 
     /// <summary>
