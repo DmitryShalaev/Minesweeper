@@ -201,23 +201,4 @@
         MIL/6gCR//UBkf/6gJH/+SiR//6C6f///pc=
 </value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="davai-po-novoi-misha" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>bin\Debug\net8.0-windows\davai-po-novoi-misha.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="kazahstan" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>bin\Debug\net8.0-windows\kazahstan.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="pognali" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>bin\Debug\net8.0-windows\pognali.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="startuem" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>bin\Debug\net8.0-windows\startuem.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="tapok" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>bin\Debug\net8.0-windows\tapok.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="win" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>bin\Debug\net8.0-windows\win.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
 </root>

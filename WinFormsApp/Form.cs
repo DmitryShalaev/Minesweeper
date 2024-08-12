@@ -6,9 +6,9 @@ namespace WinFormsApp {
     public partial class Form : System.Windows.Forms.Form 
     {
         SoundPlayer start;
-        SoundPlayer flag = new SoundPlayer(WinFormsApp.Properties.Resources.tapok1);
-        SoundPlayer babah = new SoundPlayer(WinFormsApp.Properties.Resources.davai_po_novoi_misha);
-        SoundPlayer win = new SoundPlayer(WinFormsApp.Properties.Resources.win);
+        SoundPlayer flag = new SoundPlayer("Res/tapok.wav");
+        SoundPlayer babah = new SoundPlayer("Res/davai-po-novoi-misha.wav");
+        SoundPlayer win = new SoundPlayer("Res/win.wav");
         Minesweeper minesweeper;
 
         int height;
@@ -107,6 +107,7 @@ namespace WinFormsApp {
                     {
                         Button btn = (Button)field.GetControlFromPosition(col, row)!;
                         btn.Click -= Cell_Click!;
+                        btn.MouseDown -= Cell_MouseDown!;
                         if(minesweeper.Bombs[row * width + col]) btn.Image = Resources.bomb;
                     }
                 }
@@ -148,17 +149,16 @@ namespace WinFormsApp {
                 if(b!.Image != null) 
                 {
                     b.Image = null;
+                    b.Click += Cell_Click!;
                     b.FlatStyle = FlatStyle.Flat;
                     label5.Text = (Convert.ToInt32(label5.Text) + 1).ToString();
                 } 
                 else 
                 {
                     b.Image = Resources.tapok;
-                    b.FlatStyle = FlatStyle.Flat;
+                    b.Click -= Cell_Click!;
                     flag.Play();
                     label5.Text = (Convert.ToInt32(label5.Text) - 1).ToString();
-                    b.FlatStyle = FlatStyle.Flat;
-                    b.FlatStyle = FlatStyle.Standard;
                 }
             }
         }
@@ -171,7 +171,7 @@ namespace WinFormsApp {
             time.Text = elapsedTime.ToString(@"hh\:mm\:ss");
 
             NewGame.Image = Resources.hehe;
-            start = new SoundPlayer(WinFormsApp.Properties.Resources.startuem);
+            start = new SoundPlayer("Res/startuem.wav");
             switch (comboBox1.SelectedIndex)
             {
                 case 0:
@@ -181,13 +181,13 @@ namespace WinFormsApp {
                 case 1:
                     height = width = 16;
                     mines = 40;
-                    start = new SoundPlayer(WinFormsApp.Properties.Resources.pognali);
+                    start = new SoundPlayer("Res/pognali.wav");
                     break;
                 case 2:
                     height = 16;
                     width = 30;
                     mines = 99;
-                    start = new SoundPlayer(WinFormsApp.Properties.Resources.kazahstan);
+                    start = new SoundPlayer("Res/kazahstan.wav");
                     break;
                 case 3:
                     try
