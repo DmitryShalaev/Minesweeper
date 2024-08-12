@@ -1,97 +1,58 @@
-﻿using Core;
+﻿using System.Text;
+
+using Core;
 
 namespace Test {
     internal class Program {
-        static void Set(ref Dictionary<int, string> array, Result b) {
+        static void Set(string[] array, Result b) {
             foreach(Result? item in b.results) {
                 if(item is not null) {
-
-                    array[item.Shift] = $"{(item.IsBomb ? "#" : $"{(item.NumberOfBombs == 0 ? " " : item.NumberOfBombs.ToString())}")}";
-                    Set(ref array, item);
+                    int index = item.Shift;
+                    array[index] = item.NumberOfBombs == 0 ? " " : item.NumberOfBombs.ToString();
+                    Set(array, item);
                 }
             }
         }
 
+        private static readonly int Height = 80;
+        private static readonly int Width = 80;
+        private static readonly int Bombs = 666;
+
+        private static readonly int maxRowCoordWidth = (Height - 1).ToString().Length;
+        private static readonly int maxColCoordWidth = (Width - 1).ToString().Length;
+
         static void Main() {
-            int Height = 80;
-            int Width = 80;
-            var random = new Random();
-
-            // Найти максимальную ширину для координат
-            int maxRowCoordWidth = (Height - 1).ToString().Length;
-            int maxColCoordWidth = (Width - 1).ToString().Length;
-
             while(true) {
+                Minesweeper minesweeper = new(Height, Width, Bombs);
+                string[] array = Enumerable.Repeat("'", Height * Width).ToArray();
 
-                Minesweeper minesweeper = new(Height, Width, 666/*random.Next(50, Width * Height / 2)*/);
-
-                var array = Enumerable.Range(0, Height * Width).ToDictionary(i => i, i => "\'");
+                PrintTableHeader();
+                PrintTable(array);
 
                 while(true) {
                     try {
-                        Console.WriteLine();
+                        Console.Write("\n> ");
                         string? str = Console.ReadLine();
+                        if(string.IsNullOrWhiteSpace(str)) break;
                         Console.Clear();
-                        Console.WriteLine();
-                        if(!string.IsNullOrEmpty(str) && str != "") {
-                            var t = str!.Split().Select(i => int.Parse(i.Trim())).ToList();
 
-                            Result b = minesweeper.CheckCell(t[0], t[1]);
+                        var t = str!.Split().Select(int.Parse).ToList();
+                        Result b = minesweeper.CheckCell(t[0], t[1]);
 
-                            // Вывод заголовка таблицы (координаты сверху)
-                            Console.Write(new string(' ', maxRowCoordWidth + 3)); // Пробелы для выравнивания
-                            for(int col = 0; col < Width; col++) {
-                                Console.Write($"{col.ToString().PadLeft(maxColCoordWidth)} ");
-                            }
+                        PrintTableHeader();
 
-                            Console.WriteLine();
-
-                            // Вывод разделительной линии
-                            Console.Write(new string(' ', maxRowCoordWidth + 2));
-                            for(int col = 0; col < Width; col++) {
-                                Console.Write(new string('-', maxColCoordWidth + 1));
-                            }
-
-                            Console.WriteLine();
-
-                            if(b.IsBomb) {
-                                // Вывод данных таблицы с координатами слева
-                                for(int row = 0; row < Height; row++) {
-                                    // Вывод координаты строки слева
-                                    Console.Write($"{row.ToString().PadLeft(maxRowCoordWidth)} | ");
-
-                                    for(int col = 0; col < Width; col++) {
-                                        Console.Write($"{(minesweeper.Bombs[row * Width + col] ? "#" : array[row * Width + col]).ToString().PadLeft(maxColCoordWidth)} ");
-                                    }
-
-                                    Console.WriteLine();
-                                }
-
-                                Console.ReadKey();
-                                break;
-                            }
-
-                            if(b.NumberOfBombs == 0) {
-                                array[b.Shift] = $"{(b.IsBomb ? "#" : $"{(b.NumberOfBombs == 0 ? " " : b.NumberOfBombs.ToString())}")}";
-                                Set(ref array, b);
-                            } else {
-                                array[b.Shift] = $"{b.NumberOfBombs}";
-                            }
-
-                            // Вывод данных таблицы с координатами слева
-                            for(int row = 0; row < Height; row++) {
-                                // Вывод координаты строки слева
-                                Console.Write($"{row.ToString().PadLeft(maxRowCoordWidth)} | ");
-
-                                for(int col = 0; col < Width; col++) {
-                                    Console.Write($"{array[row * Width + col].ToString().PadLeft(maxColCoordWidth)} ");
-                                }
-
-                                Console.WriteLine();
-                            }
-                        } else {
+                        if(b.IsBomb) {
+                            PrintTableWithBombs(array, minesweeper);
+                            Console.ReadKey();
                             break;
                         }
+
+                        if(b.NumberOfBombs == 0) {
+                            Set(array, b);
+                            array[b.Shift] = " ";
+                        } else array[b.Shift] = b.NumberOfBombs.ToString();
+
+                        PrintTable(array);
                     } catch(Exception ex) {
                         Console.WriteLine(ex.Message);
                     }
@@ -99,6 +60,56 @@ namespace Test {
 
                 Console.Clear();
             }
+        }
+
+        static void PrintTableHeader() {
+            var header = new StringBuilder();
+            header.Append(new string(' ', maxRowCoordWidth + 3));
+            for(int col = 0; col < Width; col++) {
+                header.Append($"{col.ToString().PadLeft(maxColCoordWidth)} ");
+            }
+
+            header.AppendLine();
+
+            header.Append(new string(' ', maxRowCoordWidth + 2));
+            for(int col = 0; col < Width; col++) {
+                header.Append(new string('-', maxColCoordWidth + 1));
+            }
+
+            header.AppendLine();
+
+            Console.Write(header.ToString());
+        }
+
+        static void PrintTable(string[] array) {
+            var sb = new StringBuilder();
+
+            for(int row = 0; row < Height; row++) {
+                sb.Append($"{row.ToString().PadLeft(maxRowCoordWidth)} | ");
+                for(int col = 0; col < Width; col++) {
+                    sb.Append($"{array[row * Width + col].PadLeft(maxColCoordWidth)} ");
+                }
+
+                sb.AppendLine();
+            }
+
+            Console.Write(sb.ToString());
+        }
+
+        static void PrintTableWithBombs(string[] array, Minesweeper minesweeper) {
+            var sb = new StringBuilder();
+
+            for(int row = 0; row < Height; row++) {
+                sb.Append($"{row.ToString().PadLeft(maxRowCoordWidth)} | ");
+                for(int col = 0; col < Width; col++) {
+                    int index = row * Width + col;
+                    sb.Append($"{(minesweeper.Bombs[index] ? "#" : array[index]).PadLeft(maxColCoordWidth)} ");
+                }
+
+                sb.AppendLine();
+            }
+
+            Console.Write(sb.ToString());
         }
     }
 }
