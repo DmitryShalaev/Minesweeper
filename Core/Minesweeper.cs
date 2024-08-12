@@ -30,7 +30,7 @@
         /// <summary>
         /// Массив результатов проверки соседних ячеек.
         /// </summary>
-        public Result[] results = new Result[8];
+        public Result[] results = new Result[4];
 
         /// <summary>
         /// Указывает, содержит ли ячейка мину.
@@ -156,10 +156,10 @@
             if(NumberOfBombs != 0)
                 return new(Width, false, NumberOfBombs) { Shift = shift };
 
-            HashSet<int> hash = [];
-            Result result = new(Width);
+            ByteArray _checked = new(Width * Height);
             int[] neighbors = GetNeighbors();
-            GetEmptyRegion(shift, ref result!, ref neighbors, ref hash);
+            Result result = new(Width);
+            GetEmptyRegion(shift, ref result!, ref neighbors, ref _checked);
 
             return result!;
         }
@@ -171,14 +171,13 @@
         /// <param name="result">Объект <see cref="Result"/> для сохранения информации о проверенной области. Может быть заменен на <c>null</c>, если ячейка уже проверена или содержит мину.</param>
         /// <param name="neighbors">Массив смещений для определения соседних ячеек.</param>
         /// <param name="hash">Множество <see cref="HashSet{T}"/>, содержащее смещения уже проверенных ячеек, чтобы избежать повторной проверки.</param>
-        private void GetEmptyRegion(int shift, ref Result? result, ref int[] neighbors, ref HashSet<int> hash) {
-            if(result is null || hash.Contains(shift)) {
+        private void GetEmptyRegion(int shift, ref Result? result, ref int[] neighbors, ref ByteArray _checked) {
+            if(result is null || _checked[shift]) {
                 result = null;
                 return;
             }
 
-            // Добавляем текущее смещение в множество проверенных
-            hash.Add(shift);
+            _checked[shift] = true;
 
             // Обновляем смещение в объекте результата
             result.Shift = shift;
@@ -194,7 +193,7 @@
             for(int i = 0; i < 4; i++) {
                 if(IsNeighborCellValid(shift, neighbors[i])) {
                     result.results[i] = new Result(Width);
-                    GetEmptyRegion(shift + neighbors[i], ref result.results[i]!, ref neighbors, ref hash);
+                    GetEmptyRegion(shift + neighbors[i], ref result.results[i]!, ref neighbors, ref _checked);
                 }
             }
         }
