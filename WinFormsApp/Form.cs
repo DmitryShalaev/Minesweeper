@@ -6,9 +6,9 @@ namespace WinFormsApp {
     public partial class Form : System.Windows.Forms.Form 
     {
         SoundPlayer start;
-        SoundPlayer flag = new SoundPlayer("tapok.wav");
-        SoundPlayer babah = new SoundPlayer("davai-po-novoi-misha.wav");
-        SoundPlayer win = new SoundPlayer("win.wav");
+        SoundPlayer flag = new SoundPlayer(WinFormsApp.Properties.Resources.tapok1);
+        SoundPlayer babah = new SoundPlayer(WinFormsApp.Properties.Resources.davai_po_novoi_misha);
+        SoundPlayer win = new SoundPlayer(WinFormsApp.Properties.Resources.win);
         Minesweeper minesweeper;
 
         int height;
@@ -171,7 +171,7 @@ namespace WinFormsApp {
             time.Text = elapsedTime.ToString(@"hh\:mm\:ss");
 
             NewGame.Image = Resources.hehe;
-            start = new SoundPlayer("startuem.wav");
+            start = new SoundPlayer(WinFormsApp.Properties.Resources.startuem);
             switch (comboBox1.SelectedIndex)
             {
                 case 0:
@@ -181,13 +181,13 @@ namespace WinFormsApp {
                 case 1:
                     height = width = 16;
                     mines = 40;
-                    start = new SoundPlayer("pognali.wav");
+                    start = new SoundPlayer(WinFormsApp.Properties.Resources.pognali);
                     break;
                 case 2:
                     height = 16;
                     width = 30;
                     mines = 99;
-                    start = new SoundPlayer("kazahstan.wav");
+                    start = new SoundPlayer(WinFormsApp.Properties.Resources.kazahstan);
                     break;
                 case 3:
                     try
