@@ -159,7 +159,6 @@
             NewGame.Image = Properties.Resources.start_button;
             NewGame.Location = new Point(285, 10);
             NewGame.Name = "NewGame";
-            NewGame.RightToLeft = RightToLeft.No;
             NewGame.Size = new Size(92, 86);
             NewGame.TabIndex = 0;
             NewGame.UseVisualStyleBackColor = true;
@@ -174,7 +173,7 @@
             comboBox1.Name = "comboBox1";
             comboBox1.Size = new Size(117, 23);
             comboBox1.TabIndex = 1;
-            comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
+            comboBox1.SelectedIndexChanged += ComboBox1_SelectedIndexChanged;
             // 
             // field
             // 
@@ -195,7 +194,7 @@
             // timer
             // 
             timer.Interval = 1000;
-            timer.Tick += timer1_Tick;
+            timer.Tick += Timer1_Tick;
             // 
             // Form
             // 
