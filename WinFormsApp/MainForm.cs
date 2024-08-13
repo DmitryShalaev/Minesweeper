@@ -28,22 +28,6 @@ namespace WinFormsApp {
             elapsedTime = new TimeSpan(0);
         }
 
-        private void Timer1_Tick(object sender, EventArgs e) {
-            elapsedTime = elapsedTime.Add(TimeSpan.FromSeconds(1));
-            time.Text = elapsedTime.ToString(@"hh\:mm\:ss");
-        }
-
-        private void MoveToCenterScreen() {
-            var screen = Screen.FromControl(this);
-            Top = screen.Bounds.Height / 2 - Height / 2;
-            Left = screen.Bounds.Width / 2 - Bounds.Width / 2;
-        }
-
-        public void EnableDoubleBuffering(Control control) {
-            System.Reflection.PropertyInfo aProp = typeof(Control).GetProperty("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
-            aProp.SetValue(control, true, null);
-        }
-
         private void DrawField(int height, int width) {
             // Приостанавливаем компоновку и отрисовку поля
             field.SuspendLayout();
@@ -109,6 +93,50 @@ namespace WinFormsApp {
             // Возобновляем компоновку и показываем поле
             field.ResumeLayout();
             field.Visible = true;
+        }
+
+        private void NewGame_Click(object sender, EventArgs e) {
+            timer.Stop();
+            tm = false;
+            elapsedTime = new TimeSpan(0);
+            time.Text = elapsedTime.ToString(@"hh\:mm\:ss");
+
+            start = new SoundPlayer(Resources.startuem);
+            switch(comboBox1.SelectedIndex) {
+                case 0:
+                    height = width = 9;
+                    mines = 10;
+                    break;
+                case 1:
+                    height = width = 16;
+                    mines = 40;
+                    start = new SoundPlayer(Resources.pognali);
+                    break;
+                case 2:
+                    height = 16;
+                    width = 30;
+                    mines = 99;
+                    start = new SoundPlayer(Resources.kazahstan);
+                    break;
+                case 3:
+                    try {
+                        height = Convert.ToInt32(inputHeight.Text);
+                        width = Convert.ToInt32(inputWidth.Text);
+                        mines = Convert.ToInt32(inputMines.Text);
+                    } catch { MessageBox.Show("Введенные данные некорректны!", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error); return; }
+                    if (height * width <= mines) { MessageBox.Show("Некорректное количество мин!", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error); return; }
+                    break;
+
+            }
+
+            NewGame.Image = Resources.hehe;
+            countCells = width * height;
+            minesweeper = new(height, width, mines);
+            DrawField(height, width);
+            MoveToCenterScreen();
+            start.Play();
+            field.Enabled = true;
+            label5.Text = $"Бомбы: {mines}";
         }
 
         private void Set(Result r) {
@@ -226,59 +254,35 @@ namespace WinFormsApp {
             }
         }
 
-        private void NewGame_Click(object sender, EventArgs e) {
-            timer.Stop();
-            tm = false;
-            elapsedTime = new TimeSpan(0);
-            time.Text = elapsedTime.ToString(@"hh\:mm\:ss");
-
-            NewGame.Image = Resources.hehe;
-            start = new SoundPlayer(Resources.startuem);
-            switch(comboBox1.SelectedIndex) {
-                case 0:
-                    height = width = 9;
-                    mines = 10;
-                    break;
-                case 1:
-                    height = width = 16;
-                    mines = 40;
-                    start = new SoundPlayer(Resources.pognali);
-                    break;
-                case 2:
-                    height = 16;
-                    width = 30;
-                    mines = 99;
-                    start = new SoundPlayer(Resources.kazahstan);
-                    break;
-                case 3:
-                    try {
-                        height = Convert.ToInt32(inputHeight.Text);
-                        width = Convert.ToInt32(inputWidth.Text);
-                        mines = Convert.ToInt32(inputMines.Text);
-                    } catch { MessageBox.Show("Введенные данные некорректны!"); return; }
-
-                    break;
-
-            }
-
-            countCells = width * height;
-            minesweeper = new(height, width, mines);
-            DrawField(height, width);
-            MoveToCenterScreen();
-            start.Play();
-            field.Enabled = true;
-            minesCountCells = mines;
-            label5.Text = $"Бомбы: {minesCountCells}";
-        }
-
-        private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e) {
+        private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e) 
+        {
             NewGame.Image = Resources.start_button;
             TLP_Custom.Visible = comboBox1.SelectedIndex == 3;
         }
 
         private void ReturnOldSize() => Size = new Size(690, 810);
 
-        private void Form_Load(object sender, EventArgs e) {
+        private void Timer1_Tick(object sender, EventArgs e) 
+        {
+            elapsedTime = elapsedTime.Add(TimeSpan.FromSeconds(1));
+            time.Text = elapsedTime.ToString(@"hh\:mm\:ss");
+        }
+
+        private void MoveToCenterScreen() 
+        {
+            var screen = Screen.FromControl(this);
+            Top = screen.Bounds.Height / 2 - Height / 2;
+            Left = screen.Bounds.Width / 2 - Bounds.Width / 2;
+        }
+
+        public void EnableDoubleBuffering(Control control) 
+        {
+            System.Reflection.PropertyInfo aProp = typeof(Control).GetProperty("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
+            aProp.SetValue(control, true, null);
+        }
+
+        private void Form_Load(object sender, EventArgs e) 
+        {
             DrawField(9, 9);
             field.Enabled = false;
         }
