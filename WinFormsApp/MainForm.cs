@@ -204,6 +204,8 @@ namespace WinFormsApp {
         private void HandleBombClicked(Button b) {
             EndGame(Resources.bomb);
 
+            label5.Text = $"Бомбы: {minesCountCells = 0}";
+
             b!.Image = Resources.bomb;
             NewGame.Image = Resources.nothehe;
             babah.Play();
@@ -274,7 +276,7 @@ namespace WinFormsApp {
             Left = screen.Bounds.Width / 2 - Bounds.Width / 2;
         }
 
-        public void EnableDoubleBuffering(Control control) {
+        public static void EnableDoubleBuffering(Control control) {
             System.Reflection.PropertyInfo aProp = typeof(Control).GetProperty("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
             aProp.SetValue(control, true, null);
         }
