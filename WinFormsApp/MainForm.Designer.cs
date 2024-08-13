@@ -138,6 +138,7 @@
             // 
             NewGame.Anchor = AnchorStyles.None;
             NewGame.FlatAppearance.BorderSize = 0;
+            NewGame.FlatAppearance.MouseOverBackColor = SystemColors.Control;
             NewGame.FlatStyle = FlatStyle.Flat;
             NewGame.Image = Properties.Resources.start_button;
             NewGame.Location = new Point(288, 7);
