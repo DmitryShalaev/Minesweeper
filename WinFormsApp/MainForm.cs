@@ -124,7 +124,9 @@ namespace WinFormsApp {
                         width = Convert.ToInt32(inputWidth.Text);
                         mines = Convert.ToInt32(inputMines.Text);
                     } catch { MessageBox.Show("Введенные данные некорректны!", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error); return; }
-                    if (height * width <= mines) { MessageBox.Show("Некорректное количество мин!", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error); return; }
+
+                    if(height * width <= mines) { MessageBox.Show("Некорректное количество мин!", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error); return; }
+
                     break;
 
             }
@@ -136,7 +138,7 @@ namespace WinFormsApp {
             MoveToCenterScreen();
             start.Play();
             field.Enabled = true;
-            label5.Text = $"Бомбы: {mines}";
+            label5.Text = $"Бомбы: {minesCountCells = mines}";
         }
 
         private void Set(Result r) {
@@ -254,35 +256,30 @@ namespace WinFormsApp {
             }
         }
 
-        private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e) 
-        {
+        private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e) {
             NewGame.Image = Resources.start_button;
             TLP_Custom.Visible = comboBox1.SelectedIndex == 3;
         }
 
         private void ReturnOldSize() => Size = new Size(690, 810);
 
-        private void Timer1_Tick(object sender, EventArgs e) 
-        {
+        private void Timer1_Tick(object sender, EventArgs e) {
             elapsedTime = elapsedTime.Add(TimeSpan.FromSeconds(1));
             time.Text = elapsedTime.ToString(@"hh\:mm\:ss");
         }
 
-        private void MoveToCenterScreen() 
-        {
+        private void MoveToCenterScreen() {
             var screen = Screen.FromControl(this);
             Top = screen.Bounds.Height / 2 - Height / 2;
             Left = screen.Bounds.Width / 2 - Bounds.Width / 2;
         }
 
-        public void EnableDoubleBuffering(Control control) 
-        {
+        public void EnableDoubleBuffering(Control control) {
             System.Reflection.PropertyInfo aProp = typeof(Control).GetProperty("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
             aProp.SetValue(control, true, null);
         }
 
-        private void Form_Load(object sender, EventArgs e) 
-        {
+        private void Form_Load(object sender, EventArgs e) {
             DrawField(9, 9);
             field.Enabled = false;
         }
