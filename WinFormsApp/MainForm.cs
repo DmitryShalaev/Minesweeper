@@ -87,7 +87,7 @@ namespace WinFormsApp {
             ReturnOldSize();
             field.Size = new Size(buttonSize * width, buttonSize * height);
             if(field.Width > ClientSize.Width || field.Height > ClientSize.Height) {
-                ClientSize = new Size(Math.Max(ClientSize.Width, field.Width) + 10, Math.Max(ClientSize.Height, field.Height) + TLP_Custom.Height);
+                ClientSize = new Size(Math.Max(ClientSize.Width, field.Width)+10, Math.Max(ClientSize.Height, field.Height)+ TLP_Custom.Height+ height);
             }
 
             // Возобновляем компоновку и показываем поле
@@ -139,6 +139,8 @@ namespace WinFormsApp {
             start.Play();
             field.Enabled = true;
             label5.Text = $"Бомбы: {minesCountCells = mines}";
+
+            GC.Collect();
         }
 
         private void Set(Result r) {

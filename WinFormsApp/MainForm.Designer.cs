@@ -169,7 +169,6 @@
             field.Font = new Font("Segoe UI Black", 14F, FontStyle.Bold, GraphicsUnit.Point, 204);
             field.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
             field.Location = new Point(89, 201);
-            field.Margin = new Padding(1);
             field.Name = "field";
             field.RowCount = 2;
             field.RowStyles.Add(new RowStyle());
