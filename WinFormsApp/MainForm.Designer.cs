@@ -1,5 +1,5 @@
 ﻿namespace WinFormsApp {
-    partial class Form {
+    partial class MainForm {
         /// <summary>
         ///  Required designer variable.
         /// </summary>
@@ -24,7 +24,7 @@
         /// </summary>
         private void InitializeComponent() {
             components = new System.ComponentModel.Container();
-            var resources = new System.ComponentModel.ComponentResourceManager(typeof(Form));
+            var resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             groupBox1 = new GroupBox();
             time = new Label();
             label5 = new Label();
@@ -177,18 +177,18 @@
             // 
             // field
             // 
-            field.Anchor = AnchorStyles.None;
             field.ColumnCount = 1;
             field.ColumnStyles.Add(new ColumnStyle());
             field.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
-            field.Font = new Font("Segoe UI Black", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 204);
+            field.Font = new Font("Segoe UI Black", 14F, FontStyle.Bold, GraphicsUnit.Point, 204);
             field.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
-            field.Location = new Point(12, 106);
+            field.Location = new Point(12, 103);
+            field.Margin = new Padding(1);
             field.Name = "field";
             field.RowCount = 2;
             field.RowStyles.Add(new RowStyle());
             field.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            field.Size = new Size(650, 550);
+            field.Size = new Size(650, 559);
             field.TabIndex = 1;
             // 
             // timer

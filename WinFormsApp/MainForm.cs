@@ -4,7 +4,7 @@ using Core;
 
 using WinFormsApp.Properties;
 namespace WinFormsApp {
-    public partial class Form : System.Windows.Forms.Form {
+    public partial class MainForm : System.Windows.Forms.Form {
         private SoundPlayer? start;
         private readonly SoundPlayer flag = new("Res/tapok.wav");
         private readonly SoundPlayer babah = new("Res/davai-po-novoi-misha.wav");
@@ -17,8 +17,9 @@ namespace WinFormsApp {
         private int countCells;
         private bool tm;
         private TimeSpan elapsedTime;
+        private readonly Color[] colors = [Color.Blue, Color.Green, Color.Red, Color.DarkViolet, Color.DarkRed, Color.Magenta, Color.Goldenrod, Color.LightSeaGreen];
 
-        public Form() {
+        public MainForm() {
             InitializeComponent();
 
             comboBox1.SelectedIndex = 0;
@@ -52,6 +53,7 @@ namespace WinFormsApp {
             field.RowCount = height;
             field.ColumnCount = width;
 
+
             EnableDoubleBuffering(field);
 
             int buttonSize = 40;
@@ -84,8 +86,11 @@ namespace WinFormsApp {
                     } else {
                         b = new Button {
                             Size = new Size(buttonSize, buttonSize),
-                            FlatStyle = FlatStyle.Flat
+                            FlatStyle = FlatStyle.Flat,
+
+                            Margin = new(1)
                         };
+                        b.FlatAppearance.BorderColor = Color.Black;
                         b.Click += new EventHandler(Cell_Click!);
                         b.MouseDown += new MouseEventHandler(Cell_MouseDown!);
                         field.Controls.Add(b, i, j);
@@ -122,6 +127,7 @@ namespace WinFormsApp {
                     } else {
                         btn.Image = null;
                         btn.Text = item.NumberOfBombs.ToString();
+                        btn.ForeColor = colors[item.NumberOfBombs - 1];
                     }
 
                     Set(item);
@@ -130,6 +136,7 @@ namespace WinFormsApp {
         }
 
         private void Cell_Click(object sender, EventArgs e) {
+        
             if(!tm) {
                 timer.Start();
                 tm = true;
@@ -150,6 +157,7 @@ namespace WinFormsApp {
                 Set(res);
             } else {
                 b.Text = res.NumberOfBombs.ToString();
+                b.ForeColor = colors[res.NumberOfBombs - 1];
             }
 
             b.Click -= Cell_Click!;
@@ -179,8 +187,9 @@ namespace WinFormsApp {
             timer.Stop();
             elapsedTime = new TimeSpan(0);
             tm = false;
-            win.Play();
-            MessageBox.Show("спю, онаедю!");
+
+            Player player = new();
+            player.Show();
         }
 
         private void EndGame(Bitmap img) {
