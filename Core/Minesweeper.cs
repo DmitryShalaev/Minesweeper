@@ -93,6 +93,11 @@
         private bool FirstMove { get; set; } = true;
 
         /// <summary>
+        /// Массив, содержащий информацию о проверенных ячейках.
+        /// </summary>
+        private readonly ByteArray Checked;
+
+        /// <summary>
         /// Возвращает массив смещений всех соседних ячеек относительно текущей ячейки, включая угловые.
         /// </summary>
         /// <returns>Массив смещений для всех восьми соседних ячеек.</returns>
@@ -127,6 +132,8 @@
             Width = width;
             NumberOfBombs = numberOfBombs;
             Bombs = new(height * width);
+
+            Checked = new(Width * Height);
         }
 
         /// <summary>
@@ -156,10 +163,10 @@
             if(NumberOfBombs != 0)
                 return new(Width, false, NumberOfBombs) { Shift = shift };
 
-            ByteArray _checked = new(Width * Height);
+            
             int[] neighbors = GetNeighbors();
             Result result = new(Width);
-            GetEmptyRegion(shift, ref result!, ref neighbors, ref _checked);
+            GetEmptyRegion(shift, ref result!, ref neighbors);
 
             return result!;
         }
@@ -171,13 +178,13 @@
         /// <param name="result">Объект <see cref="Result"/> для сохранения информации о проверенной области. Может быть заменен на <c>null</c>, если ячейка уже проверена или содержит мину.</param>
         /// <param name="neighbors">Массив смещений для определения соседних ячеек.</param>
         /// <param name="hash">Множество <see cref="HashSet{T}"/>, содержащее смещения уже проверенных ячеек, чтобы избежать повторной проверки.</param>
-        private void GetEmptyRegion(int shift, ref Result? result, ref int[] neighbors, ref ByteArray _checked) {
-            if(result is null || _checked[shift]) {
+        private void GetEmptyRegion(int shift, ref Result? result, ref int[] neighbors) {
+            if(result is null || Checked[shift]) {
                 result = null;
                 return;
             }
 
-            _checked[shift] = true;
+            Checked[shift] = true;
 
             // Обновляем смещение в объекте результата
             result.Shift = shift;
@@ -193,7 +200,7 @@
             for(int i = 0; i < 4; i++) {
                 if(IsNeighborCellValid(shift, neighbors[i])) {
                     result.results[i] = new Result(Width);
-                    GetEmptyRegion(shift + neighbors[i], ref result.results[i]!, ref neighbors, ref _checked);
+                    GetEmptyRegion(shift + neighbors[i], ref result.results[i]!, ref neighbors);
                 }
             }
         }
