@@ -77,7 +77,6 @@ namespace WinFormsApp {
             for(int i = 0; i < width; i++) {
                 for(int j = 0; j < height; j++) {
                     Button b;
-                    
 
                     if(i * height + j < field.Controls.Count) {
                         b = (Button)field.Controls[i * height + j];
@@ -116,61 +115,83 @@ namespace WinFormsApp {
                     btn!.Click -= Cell_Click!;
                     btn!.MouseDown -= Cell_MouseDown!;
                     countCells--;
-                    if(item.NumberOfBombs == 0) { btn.Image = null; btn.BackColor = Color.Gray; } else btn.Text = item.NumberOfBombs.ToString();
+                    if(item.NumberOfBombs == 0) {
+                        btn.Image = null;
+                        btn.BackColor = Color.Gray;
+                    } else {
+                        btn.Image = null;
+                        btn.Text = item.NumberOfBombs.ToString();
+                    }
+
                     Set(item);
                 }
             }
         }
 
         private void Cell_Click(object sender, EventArgs e) {
-            if(!tm) { timer.Start(); tm = true; }
+            if(!tm) {
+                timer.Start();
+                tm = true;
+            }
 
-            var b = sender as Button;
+            if(sender is not Button b) return;
+
             TableLayoutPanelCellPosition position = field.GetPositionFromControl(b);
             Result res = minesweeper!.CheckCell(position.Column, position.Row);
 
             if(res.IsBomb) {
-                b!.Image = Resources.bomb;
-                NewGame.Image = Resources.nothehe;
-                babah.Play();
-                timer.Stop();
-                elapsedTime = new TimeSpan(0);
-                tm = false;
-                for(int row = 0; row < height; row++) {
-                    for(int col = 0; col < width; col++) {
-                        var btn = (Button)field.GetControlFromPosition(col, row)!;
-                        btn.Click -= Cell_Click!;
-                        btn.MouseDown -= Cell_MouseDown!;
-                        if(minesweeper.Bombs[row * width + col]) btn.Image = Resources.bomb;
-                    }
-                }
-
+                HandleBombClicked(b);
                 return;
             }
 
             if(res.NumberOfBombs == 0) {
-                b!.BackColor = Color.Gray;
+                b.BackColor = Color.Gray;
                 Set(res);
-            } else b!.Text = res.NumberOfBombs.ToString();
+            } else {
+                b.Text = res.NumberOfBombs.ToString();
+            }
+
             b.Click -= Cell_Click!;
             b.MouseDown -= Cell_MouseDown!;
 
             countCells--;
             if(countCells == mines) {
-                for(int row = 0; row < height; row++) {
-                    for(int col = 0; col < width; col++) {
-                        var btn = (Button)field.GetControlFromPosition(col, row)!;
-                        btn.Click -= Cell_Click!;
-                        if(minesweeper.Bombs[row * width + col]) btn.Image = Resources.tapok;
+                HandleWin();
+            }
+        }
+
+        private void HandleBombClicked(Button b) {
+            b!.Image = Resources.bomb;
+            NewGame.Image = Resources.nothehe;
+            babah.Play();
+            timer.Stop();
+            elapsedTime = new TimeSpan(0);
+            tm = false;
+
+            EndGame(Resources.bomb);
+        }
+
+        private void HandleWin() {
+            EndGame(Resources.tapok);
+
+            label5.Text = "0";
+            timer.Stop();
+            elapsedTime = new TimeSpan(0);
+            tm = false;
+            win.Play();
+            MessageBox.Show("спю, онаедю!");
+        }
+
+        private void EndGame(Bitmap img) {
+            for(int row = 0; row < height; row++) {
+                for(int col = 0; col < width; col++) {
+                    var btn = (Button)field.GetControlFromPosition(col, row)!;
+                    btn.Click -= Cell_Click!;
+                    btn.MouseDown -= Cell_MouseDown!;
+                    if(minesweeper!.Bombs[row * width + col]) {
+                        btn.Image = img;
                     }
                 }
-
-                label5.Text = "0";
-                timer.Stop();
-                elapsedTime = new TimeSpan(0);
-                tm = false;
-                win.Play();
-                MessageBox.Show("спю, онаедю!");
             }
         }
 
