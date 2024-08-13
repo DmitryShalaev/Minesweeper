@@ -4,11 +4,11 @@ using Core;
 
 using WinFormsApp.Properties;
 namespace WinFormsApp {
-    public partial class MainForm : System.Windows.Forms.Form {
+    public partial class MainForm : Form {
         private SoundPlayer? start;
-        private readonly SoundPlayer flag = new("Res/tapok.wav");
-        private readonly SoundPlayer babah = new("Res/davai-po-novoi-misha.wav");
-        private readonly SoundPlayer win = new("Res/win.wav");
+        private readonly SoundPlayer flag = new(Resources.tapok1);
+        private readonly SoundPlayer babah = new(Resources.davai_po_novoi_misha);
+        private readonly SoundPlayer win = new(Resources.win);
         private Minesweeper? minesweeper;
 
         private int height;
@@ -21,6 +21,7 @@ namespace WinFormsApp {
 
         public MainForm() {
             InitializeComponent();
+     
 
             comboBox1.SelectedIndex = 0;
             elapsedTime = new TimeSpan(0);
@@ -102,11 +103,11 @@ namespace WinFormsApp {
             ReturnOldSize();
             field.Size = new Size(buttonSize * width, buttonSize * height);
             if(field.Width > ClientSize.Width || field.Height > ClientSize.Height) {
-                ClientSize = new Size(Math.Max(ClientSize.Width, field.Width) + 10, Math.Max(ClientSize.Height, field.Height) + groupBox1.Height);
+                ClientSize = new Size(Math.Max(ClientSize.Width, field.Width) + 10, Math.Max(ClientSize.Height, field.Height) + TLP_Custom.Height);
             }
 
-            field.Location = new Point((ClientSize.Width - field.Width) / 2, (ClientSize.Height + groupBox1.Height - field.Height) / 2);
-            groupBox1.Location = new Point((ClientSize.Width - groupBox1.Width) / 2, 10);
+            //field.Location = new Point((ClientSize.Width - field.Width) / 2, (ClientSize.Height + groupBox1.Height - field.Height) / 2);
+            //groupBox1.Location = new Point((ClientSize.Width - groupBox1.Width) / 2, 10);
 
             // Возобновляем компоновку и показываем поле
             field.ResumeLayout();
@@ -136,7 +137,7 @@ namespace WinFormsApp {
         }
 
         private void Cell_Click(object sender, EventArgs e) {
-        
+
             if(!tm) {
                 timer.Start();
                 tm = true;
@@ -183,7 +184,7 @@ namespace WinFormsApp {
         private void HandleWin() {
             EndGame(Resources.tapok);
 
-            label5.Text = "0";
+            label5.Text = "Бомбы: 0";
             timer.Stop();
             elapsedTime = new TimeSpan(0);
             tm = false;
@@ -212,12 +213,12 @@ namespace WinFormsApp {
                     b.Image = null;
                     b.Click += Cell_Click!;
                     b.FlatStyle = FlatStyle.Flat;
-                    label5.Text = (Convert.ToInt32(label5.Text) + 1).ToString();
+                    label5.Text = $"Бомбы: {(Convert.ToInt32(label5.Text.Split()[1]) + 1)}";
                 } else {
                     b.Image = Resources.tapok;
                     b.Click -= Cell_Click!;
                     flag.Play();
-                    label5.Text = (Convert.ToInt32(label5.Text) - 1).ToString();
+                    label5.Text = $"Бомбы: {(Convert.ToInt32(label5.Text.Split()[1]) - 1)}";
                 }
             }
         }
@@ -229,7 +230,7 @@ namespace WinFormsApp {
             time.Text = elapsedTime.ToString(@"hh\:mm\:ss");
 
             NewGame.Image = Resources.hehe;
-            start = new SoundPlayer("Res/startuem.wav");
+            start = new SoundPlayer(Resources.startuem);
             switch(comboBox1.SelectedIndex) {
                 case 0:
                     height = width = 9;
@@ -238,13 +239,13 @@ namespace WinFormsApp {
                 case 1:
                     height = width = 16;
                     mines = 40;
-                    start = new SoundPlayer("Res/pognali.wav");
+                    start = new SoundPlayer(Resources.pognali);
                     break;
                 case 2:
                     height = 16;
                     width = 30;
                     mines = 99;
-                    start = new SoundPlayer("Res/kazahstan.wav");
+                    start = new SoundPlayer(Resources.kazahstan);
                     break;
                 case 3:
                     try {
@@ -263,12 +264,12 @@ namespace WinFormsApp {
             MoveToCenterScreen();
             start.Play();
             field.Enabled = true;
-            label5.Text = mines.ToString();
+            label5.Text = $"Бомбы: {mines}";
         }
 
         private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e) {
             NewGame.Image = Resources.start_button;
-            groupBox2.Visible = comboBox1.SelectedIndex == 3;
+            TLP_Custom.Visible = comboBox1.SelectedIndex == 3;
         }
 
         private void ReturnOldSize() => Size = new Size(690, 810);
