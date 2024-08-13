@@ -76,10 +76,10 @@ namespace WinFormsApp {
                 if(item is not null) 
                 {
                     Button btn = (Button)field.GetControlFromPosition(item.Y, item.X)!;
+                    btn!.Click -= Cell_Click!;
                     btn!.MouseDown -= Cell_MouseDown!;
                     countCells--;
-                    if(item.IsBomb) btn.Image = Resources.bomb;
-                    else if(item.NumberOfBombs == 0) { btn.Image = null; btn.BackColor = Color.Gray; }
+                    if(item.NumberOfBombs == 0) { btn.Image = null; btn.BackColor = Color.Gray; }
                     else btn.Text = item.NumberOfBombs.ToString();
                     Set(item);
                 }
