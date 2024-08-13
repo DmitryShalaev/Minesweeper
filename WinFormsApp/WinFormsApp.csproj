@@ -55,7 +55,7 @@
 
   <ItemGroup>
     <None Update="Resources\ЧЕМПИОН.mp4">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="Res\davai-po-novoi-misha.wav">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>

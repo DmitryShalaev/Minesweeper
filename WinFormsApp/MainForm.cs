@@ -11,6 +11,8 @@ namespace WinFormsApp {
         private readonly SoundPlayer win = new(Resources.win);
         private Minesweeper? minesweeper;
 
+        private int minesCountCells;
+
         private int height;
         private int width;
         private int mines;
@@ -21,7 +23,6 @@ namespace WinFormsApp {
 
         public MainForm() {
             InitializeComponent();
-     
 
             comboBox1.SelectedIndex = 0;
             elapsedTime = new TimeSpan(0);
@@ -53,7 +54,6 @@ namespace WinFormsApp {
             field.ColumnStyles.Clear();
             field.RowCount = height;
             field.ColumnCount = width;
-
 
             EnableDoubleBuffering(field);
 
@@ -106,9 +106,6 @@ namespace WinFormsApp {
                 ClientSize = new Size(Math.Max(ClientSize.Width, field.Width) + 10, Math.Max(ClientSize.Height, field.Height) + TLP_Custom.Height);
             }
 
-            //field.Location = new Point((ClientSize.Width - field.Width) / 2, (ClientSize.Height + groupBox1.Height - field.Height) / 2);
-            //groupBox1.Location = new Point((ClientSize.Width - groupBox1.Width) / 2, 10);
-
             // Возобновляем компоновку и показываем поле
             field.ResumeLayout();
             field.Visible = true;
@@ -121,6 +118,10 @@ namespace WinFormsApp {
                     btn!.Click -= Cell_Click!;
                     btn!.MouseDown -= Cell_MouseDown!;
                     countCells--;
+
+                    if(btn!.Image != null) {
+                        label5.Text = $"Бомбы: {++minesCountCells}";
+                    }
 
                     if(item.NumberOfBombs == 0) {
                         btn.Image = null;
@@ -184,7 +185,8 @@ namespace WinFormsApp {
         private void HandleWin() {
             EndGame(Resources.tapok);
 
-            label5.Text = "Бомбы: 0";
+            label5.Text = $"Бомбы: {minesCountCells = 0}";
+
             timer.Stop();
             elapsedTime = new TimeSpan(0);
             tm = false;
@@ -207,18 +209,19 @@ namespace WinFormsApp {
         }
 
         private void Cell_MouseDown(object sender, MouseEventArgs e) {
+
             var b = sender as Button;
             if(e.Button == MouseButtons.Right) {
                 if(b!.Image != null) {
                     b.Image = null;
                     b.Click += Cell_Click!;
                     b.FlatStyle = FlatStyle.Flat;
-                    label5.Text = $"Бомбы: {(Convert.ToInt32(label5.Text.Split()[1]) + 1)}";
+                    label5.Text = $"Бомбы: {++minesCountCells}";
                 } else {
                     b.Image = Resources.tapok;
                     b.Click -= Cell_Click!;
                     flag.Play();
-                    label5.Text = $"Бомбы: {(Convert.ToInt32(label5.Text.Split()[1]) - 1)}";
+                    label5.Text = $"Бомбы: {--minesCountCells}";
                 }
             }
         }
@@ -264,7 +267,8 @@ namespace WinFormsApp {
             MoveToCenterScreen();
             start.Play();
             field.Enabled = true;
-            label5.Text = $"Бомбы: {mines}";
+            minesCountCells = mines;
+            label5.Text = $"Бомбы: {minesCountCells}";
         }
 
         private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e) {
