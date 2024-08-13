@@ -160,10 +160,12 @@
                 return new(Width, true, 0) { Shift = shift };
 
             int NumberOfBombs = GetNumberOfBombs(shift);
-            if(NumberOfBombs != 0)
-                return new(Width, false, NumberOfBombs) { Shift = shift };
+            if(NumberOfBombs != 0) {
+                Checked[shift] = true;
 
-            
+                return new(Width, false, NumberOfBombs) { Shift = shift };
+            }
+
             int[] neighbors = GetNeighbors();
             Result result = new(Width);
             GetEmptyRegion(shift, ref result!, ref neighbors);
